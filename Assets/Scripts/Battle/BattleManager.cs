@@ -4,13 +4,29 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    public static BattleManager instance;
+
     Battler player;
     Battler enemy;
 
-    public void StartBattle(Battler _player, Battler _enemy)
+    private void Awake()
     {
-        player = _player;
-        enemy = _enemy;
+        if (instance != null && instance != this)
+            Destroy(gameObject);
+        instance = this;
+    }
+
+    public void StartBattle(GameObject _player, GameObject _enemy)
+    {
+        //fix pra usar TryGetComponent qnd eu tver saco pra consertar isso
+        player = _player.GetComponent<Battler>();
+        enemy = _enemy.GetComponent<Battler>(); 
+
+        if(player == null || enemy == null)
+        {
+            return;
+            Debug.Log("The battle failed because one of the provided objects wasn't a Battler");
+        }
 
         if (!player.isAlive)
         {
